@@ -550,6 +550,7 @@ body {
   border-radius: 1rem;
   padding: 1.25rem;
   box-shadow: var(--card-shadow);
+  position: relative;
 }
 
 .api-key-section {
@@ -583,6 +584,8 @@ body {
   margin-bottom: 1rem;
   scrollbar-width: thin;
   scrollbar-color: var(--bg-lighter) transparent;
+  max-height: calc(100% - 120px);
+  padding-bottom: 4rem;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -611,6 +614,10 @@ body {
 .message {
   margin-bottom: 1rem;
   display: flex;
+}
+
+.message:last-child {
+  margin-bottom: 2rem;
 }
 
 .message.user {
@@ -681,12 +688,20 @@ body {
 
 .chat-input-area {
   margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+  padding-top: 1rem;
+  z-index: 10;
 }
 
 .input-container {
   display: flex;
   gap: 0.75rem;
   align-items: flex-end;
+  background: var(--card-bg);
+  padding: 0.5rem;
+  border-radius: 0.75rem;
 }
 
 .chat-input {

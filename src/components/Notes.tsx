@@ -56,7 +56,7 @@ export default function Notes() {
                 <br/>
                 <p>Drink two glass of orange juice</p>
                 <p>Read The Undiscovered Self by Jung</p>
-                <p></p>
+                <p>A must evening walk</p>
                 
               </div>
             </div>

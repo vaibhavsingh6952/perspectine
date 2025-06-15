@@ -98,6 +98,7 @@ export function MusicPlayer() {
                 type="button" 
                 className="control-btn-compact"
                 onClick={togglePlay}
+                suppressHydrationWarning
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
               </button>
@@ -107,6 +108,7 @@ export function MusicPlayer() {
                   type="button" 
                   className="volume-btn-compact"
                   onClick={toggleMute}
+                  suppressHydrationWarning
                 >
                   {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
                 </button>
@@ -118,6 +120,7 @@ export function MusicPlayer() {
                   value={volume}
                   onChange={handleVolumeChange}
                   className="volume-slider-compact"
+                  suppressHydrationWarning
                 />
               </div>
             </div>
@@ -135,15 +138,26 @@ export function RAGInterface() {
   const [artwork, setArtwork] = useState<Artwork | null>(null)
 
   useEffect(() => {
-    // Static artwork data instead of API call
-    setArtwork({
-      title: "Daily Art",
-      artist: "AI Artist",
-      date: "2024",
-      medium: "Digital",
-      url: "/artwork.png" // Make sure to add this image to your public folder
-    })
-  }, [])
+    const fetchArtwork = async () => {
+      try {
+        const response = await fetch('/api/artwork', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
+        })
+        if (!response.ok) throw new Error('Artless today')
+        const data = await response.json()
+        setArtwork(data)
+      } catch (error) {
+        console.error('Error fetching artwork:', error)
+      }
+    }
+
+    // Fetch new artwork on every component mount (tab reload)
+    fetchArtwork()
+  }, []) // Empty dependency array means this runs once on mount
 
   const askAI = async () => {
     if (!query.trim()) return
@@ -154,9 +168,8 @@ export function RAGInterface() {
     setLoading(true)
 
     try {
-      // For static export, you'll need to handle this differently
-      // Either use a third-party API or remove the RAG functionality
-      const response = await fetch('https://your-external-api.com/rag', {
+
+      const response = await fetch('/api/rag', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -201,7 +214,7 @@ export function RAGInterface() {
   return (
     <div className="home-module rag-module h-full flex flex-col">
       <div className="module-header">
-        <h3 className="h4">Consultant</h3>
+        <h3 className="h4">Butler</h3>
         <div className="rag-header-controls">
           <button 
             key="clear-chat"
@@ -209,6 +222,7 @@ export function RAGInterface() {
             onClick={clearChat}
             className="clear-btn"
             title="Clear Chat"
+            suppressHydrationWarning
           >
             🗑️
           </button>
@@ -230,7 +244,7 @@ export function RAGInterface() {
             {messages.length === 0 && (
               <div className="welcome-message">
                 <p style={{ textAlign: 'left' }}>hi.</p>
-                <p style={{ textAlign: 'left' }}>you have some time to waste?</p>
+                <p style={{ textAlign: 'left' }}>so you have some time to spare?</p>
               </div>
             )}
             {messages.map((message, index) => (
